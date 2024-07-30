@@ -1,7 +1,7 @@
 //Controller usuario
 import { UserModel } from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 import { TOKEN_KEY } from "../config/config.js";
 
 export const getUsers = async (req, res) => {
@@ -39,7 +39,7 @@ export const createUsers = async (req, res) => {
       return res.status(409).json("email already exist");
     }
     //Encrypt user password
-   const encryptedPassword = await bcrypt.hash(password.toString(),10);
+   const encryptedPassword = await bcryptjs.hash(password.toString(),10);
     // Create user in our database
     const users = await UserModel.create({
       user,
@@ -128,7 +128,7 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
     // Validate password
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
